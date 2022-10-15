@@ -1,7 +1,8 @@
 <script setup>
 import {reactive} from "vue";
 import {QrcodeStream} from 'qrcode-reader-vue3'
-import {GDialog} from "gitart-vue-dialog";
+import {GDialog} from "gitart-vue-dialog"
+import { useClipboard } from '@vueuse/core'
 
 const state = reactive({
   camera: 'auto',
@@ -9,6 +10,9 @@ const state = reactive({
   order: null,
   dialogState: false
 })
+
+const { copy, copied } = useClipboard()
+
 
 function onInit(promise) {
   promise
@@ -37,18 +41,21 @@ function turnCameraOff() {
 
 <template>
   <div v-if="state.order === null">
-    <p class="decode-result">Last result: <b>{{ state.result }}</b></p>
-
-    <QrcodeStream :camera="state.camera" @decode="onDecode" @init="onInit"/>
+    <QrcodeStream
+        :camera="state.camera"
+        @decode="onDecode"
+        @init="onInit"
+    />
   </div>
 
   <GDialog v-model="state.dialogState">
     <div class="dialog">
-      <h2>
+      <p>
         {{state.result}}
-      </h2>
+      </p>
 
-      <p>Lorem ipsum dolor sit amet.</p>
+      <button v-if="!copied" @click="copy(state.result)">Copiar</button>
+      <span v-else>Copiado!</span>
     </div>
   </GDialog>
 </template>

@@ -11,3 +11,9 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+.qrcode-stream-camera {
+  border-radius: 15px;
+  max-height: 100%;
+  height: 90vh;
+}
