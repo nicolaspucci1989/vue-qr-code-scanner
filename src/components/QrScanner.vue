@@ -4,18 +4,11 @@ import {QrcodeStream} from 'qrcode-reader-vue3'
 import {GDialog} from "gitart-vue-dialog";
 
 const state = reactive({
-  isValid: undefined,
   camera: 'auto',
   result: null,
   order: null,
   dialogState: false
 })
-
-const validationPending = computed(() =>
-    state.isValid === undefined &&
-    state.camera === 'off')
-const validationSuccess = computed(() => state.isValid === true)
-const validationFailure = computed(() => state.isValid === false)
 
 function onInit(promise) {
   promise
@@ -31,7 +24,6 @@ function onDecode(payload) {
   state.result = payload
   turnCameraOff()
   state.dialogState = true
-  state.isValid = true
 }
 
 function turnCameraOn() {
@@ -47,21 +39,7 @@ function turnCameraOff() {
   <div v-if="state.order === null">
     <p class="decode-result">Last result: <b>{{ state.result }}</b></p>
 
-    <QrcodeStream :camera="state.camera" @decode="onDecode" @init="onInit">
-      <div v-if="validationSuccess" class="validation-success">
-        <pre>
-          {{ state.order }}
-        </pre>
-      </div>
-
-      <div v-if="validationFailure" class="validation-failure">
-        This is NOT a URL!
-      </div>
-
-      <div v-if="validationPending" class="validation-pending">
-        Long validation in progress...
-      </div>
-    </QrcodeStream>
+    <QrcodeStream :camera="state.camera" @decode="onDecode" @init="onInit"/>
   </div>
 
   <GDialog v-model="state.dialogState">
