@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "qrcode-reader-vue3": "^3.1.2",
     "vue": "^3.2.37"
   },
   "devDependencies": {
