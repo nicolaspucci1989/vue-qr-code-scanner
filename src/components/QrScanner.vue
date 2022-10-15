@@ -1,63 +1,56 @@
-<script>
+<script setup>
+import {computed, reactive} from "vue";
 import {QrcodeStream} from 'qrcode-reader-vue3'
 import {GDialog} from "gitart-vue-dialog";
 
-export default {
-  components: {QrcodeStream, GDialog},
-  data() {
-    return {
-      isValid: undefined,
-      camera: 'auto',
-      result: null,
-      order: null,
-      dialogState: false
-    }
-  },
-  computed: {
-    validationPending() {
-      return this.isValid === undefined
-          && this.camera === 'off'
-    },
-    validationSuccess() {
-      return this.isValid === true
-    },
-    validationFailure() {
-      return this.isValid === false
-    }
-  },
-  methods: {
-    onInit(promise) {
-      promise
-          .catch(console.error)
-          .then(this.resetValidationState)
-    },
-    resetValidationState() {
-      this.isValid = undefined
-    },
-    async onDecode(payload) {
-      this.result = payload
-      this.turnCameraOff()
-      this.dialogState = true
-      this.isValid = true
-    },
-    turnCameraOn() {
-      this.camera = 'auto'
-    },
-    turnCameraOff() {
-      this.camera = 'off'
-    },
-  }
+const state = reactive({
+  isValid: undefined,
+  camera: 'auto',
+  result: null,
+  order: null,
+  dialogState: false
+})
+
+const validationPending = computed(() =>
+    state.isValid === undefined &&
+    state.camera === 'off')
+const validationSuccess = computed(() => state.isValid === true)
+const validationFailure = computed(() => state.isValid === false)
+
+function onInit(promise) {
+  promise
+      .catch(console.error)
+      .then(resetValidationState)
+}
+
+function resetValidationState() {
+  state.isValid = undefined
+}
+
+function onDecode(payload) {
+  state.result = payload
+  turnCameraOff()
+  state.dialogState = true
+  state.isValid = true
+}
+
+function turnCameraOn() {
+  state.camera = 'auto'
+}
+
+function turnCameraOff() {
+  state.camera = 'off'
 }
 </script>
 
 <template>
-  <div v-if="order === null">
-    <p class="decode-result">Last result: <b>{{ result }}</b></p>
+  <div v-if="state.order === null">
+    <p class="decode-result">Last result: <b>{{ state.result }}</b></p>
 
-    <QrcodeStream :camera="camera" @decode="onDecode" @init="onInit">
+    <QrcodeStream :camera="state.camera" @decode="onDecode" @init="onInit">
       <div v-if="validationSuccess" class="validation-success">
         <pre>
-          {{ this.order }}
+          {{ state.order }}
         </pre>
       </div>
 
@@ -71,10 +64,10 @@ export default {
     </QrcodeStream>
   </div>
 
-  <GDialog v-model="dialogState">
+  <GDialog v-model="state.dialogState">
     <div class="dialog">
       <h2>
-        {{result}}
+        {{state.result}}
       </h2>
 
       <p>Lorem ipsum dolor sit amet.</p>
