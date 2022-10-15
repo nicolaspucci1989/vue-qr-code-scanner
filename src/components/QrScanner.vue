@@ -1,14 +1,16 @@
 <script>
 import {QrcodeStream} from 'qrcode-reader-vue3'
+import {GDialog} from "gitart-vue-dialog";
 
 export default {
-  components: {QrcodeStream},
+  components: {QrcodeStream, GDialog},
   data() {
     return {
       isValid: undefined,
       camera: 'auto',
       result: null,
-      order: null
+      order: null,
+      dialogState: false
     }
   },
   computed: {
@@ -35,6 +37,7 @@ export default {
     async onDecode(payload) {
       this.result = payload
       this.turnCameraOff()
+      this.dialogState = true
       this.isValid = true
       this.turnCameraOn()
     },
@@ -68,9 +71,29 @@ export default {
       </div>
     </QrcodeStream>
   </div>
+
+  <GDialog v-model="dialogState">
+    <div class="dialog">
+      <h2>
+        Dialog Content
+      </h2>
+
+      <p>Lorem ipsum dolor sit amet.</p>
+    </div>
+  </GDialog>
 </template>
 
 <style scoped>
+@import 'https://cdn.jsdelivr.net/npm/gitart-vue-dialog@1.2.1/dist/style.css';
+
+.dialog {
+  padding: 30px 20px;
+}
+
+h2 {
+  margin: 0 0 20px;
+}
+
 .validation-success, .validation-failure, .validation-pending {
   position: absolute;
   width: 100%;
