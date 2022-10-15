@@ -39,7 +39,6 @@ export default {
       this.turnCameraOff()
       this.dialogState = true
       this.isValid = true
-      this.turnCameraOn()
     },
     turnCameraOn() {
       this.camera = 'auto'
@@ -75,7 +74,7 @@ export default {
   <GDialog v-model="dialogState">
     <div class="dialog">
       <h2>
-        Dialog Content
+        {{result}}
       </h2>
 
       <p>Lorem ipsum dolor sit amet.</p>
