@@ -1,5 +1,5 @@
 <script setup>
-import {computed, reactive} from "vue";
+import {reactive} from "vue";
 import {QrcodeStream} from 'qrcode-reader-vue3'
 import {GDialog} from "gitart-vue-dialog";
 
